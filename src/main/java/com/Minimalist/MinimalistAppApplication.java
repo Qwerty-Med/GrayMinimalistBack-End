@@ -8,6 +8,7 @@ public class MinimalistAppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MinimalistAppApplication.class, args);
+		System.out.print("####################### Corriendo De Manera Correcta ################33");
 	}
 
 }

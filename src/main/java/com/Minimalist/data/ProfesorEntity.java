@@ -1,26 +1,30 @@
 package com.Minimalist.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Data
+@Table(name = "profesores")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "profesor")
+@Builder
 public class ProfesorEntity {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "usuario_id")
-    private UsuarioEntity usuario;
+    private String nombre;
 
-    @OneToMany(mappedBy = "profesor")
+
+    @OneToMany(mappedBy = "profesor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MateriaEntity> materias;
+
+    @ManyToOne
+    @JoinColumn(name = "centro_academico_id")
+    private DirectivaEntity directiva;
 }

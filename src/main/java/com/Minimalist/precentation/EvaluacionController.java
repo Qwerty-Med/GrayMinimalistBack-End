@@ -1,20 +1,68 @@
 package com.Minimalist.precentation;
 
 
+import com.Minimalist.data.EvaluacionEntity;
+import com.Minimalist.service.EvaluacionService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping(
-        value = ResponseConstant.FLY_URL,
+        value = "/api/evaluaciones",
         produces = {
                 MediaType.APPLICATION_JSON_VALUE })
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
         RequestMethod.PUT })
 public class EvaluacionController {
+
+    @Autowired
+    private EvaluacionService evaluacionService;
+
+
+    public EvaluacionController(EvaluacionService evaluacionService) {
+        this.evaluacionService = evaluacionService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EvaluacionEntity>> getAll() {
+        var evaluaciones = evaluacionService.findAll();
+        return evaluaciones.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(evaluaciones);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EvaluacionEntity> getById(@PathVariable Long id) {
+        return Optional.ofNullable(evaluacionService.findOne(id))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/api/evaluaciones/")
+    public ResponseEntity<EvaluacionEntity> create(@RequestBody EvaluacionEntity evaluacion) {
+        var nueva = evaluacionService.save(evaluacion);
+        return ResponseEntity.ok(nueva);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EvaluacionEntity> update(@PathVariable Long id, @RequestBody EvaluacionEntity evaluacion) {
+        return Optional.ofNullable(evaluacionService.update(id, evaluacion))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        try {
+            evaluacionService.deleteEvaluacion(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

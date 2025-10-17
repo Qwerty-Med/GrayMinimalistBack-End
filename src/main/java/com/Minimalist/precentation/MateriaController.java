@@ -1,19 +1,67 @@
 package com.Minimalist.precentation;
 
+import com.Minimalist.data.MateriaEntity;
+import com.Minimalist.service.MateriaService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping(
-        value = ResponseConstant.FLY_URL,
+        value = "/api/materias",
         produces = {
                 MediaType.APPLICATION_JSON_VALUE })
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
         RequestMethod.PUT })
 public class MateriaController {
+
+    @Autowired
+    private  MateriaService materiaService;
+
+    public MateriaController(MateriaService materiaService) {
+        this.materiaService = materiaService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MateriaEntity>> getAll() {
+        var materias = materiaService.findAll();
+        return materias.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(materias);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MateriaEntity> getById(@PathVariable Long id) {
+        return Optional.ofNullable(materiaService.findOne(id))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/api/materias/")
+    public ResponseEntity<MateriaEntity> create(@RequestBody MateriaEntity materia) {
+        var nueva = materiaService.save(materia);
+        return ResponseEntity.ok(nueva);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MateriaEntity> update(@PathVariable Long id, @RequestBody MateriaEntity materia) {
+        return Optional.ofNullable(materiaService.update(id, materia))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        try {
+            materiaService.deleteMateria(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
+

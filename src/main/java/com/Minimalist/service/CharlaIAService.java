@@ -7,11 +7,13 @@ import java.util.List;
 
 public interface CharlaIAService {
 
-    public ResponseEntity<List<CharlaIAEntity>> findAll();
+    public List<CharlaIAEntity> findAll();
 
-    public ResponseEntity<CharlaIAEntity> save (CharlaIAEntity charla);
+    public CharlaIAEntity save (CharlaIAEntity charla);
 
-    public ResponseEntity<CharlaIAEntity> findOne(Long id);
+    public CharlaIAEntity update (Long id, CharlaIAEntity updateCharla);
 
-    public  ResponseEntity<CharlaIAEntity>deleteCharlaIAEntity(Long id);
+    public CharlaIAEntity findOne(Long id);
+
+    public  void deleteCharlaIAEntity(Long id);
 }

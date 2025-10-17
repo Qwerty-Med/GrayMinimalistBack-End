@@ -6,11 +6,9 @@ import com.Minimalist.data.DirectivaEntity;
 import java.util.List;
 
 public interface DirectivaService {
-    public List<DirectivaEntity> findAll();
-
-    public DirectivaEntity save (DirectivaEntity directiva);
-
-    public DirectivaEntity findOne(Long id);
-
-    public void deleteDirectivaEntity(Long id);
+    List<DirectivaEntity> findAll();
+    DirectivaEntity findOne(Long id);
+    DirectivaEntity save(DirectivaEntity directiva);
+    DirectivaEntity update(Long id, DirectivaEntity directiva);
+    void delete(Long id);
 }

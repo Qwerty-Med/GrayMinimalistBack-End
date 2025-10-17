@@ -1,19 +1,66 @@
 package com.Minimalist.precentation;
 
+import com.Minimalist.data.PAEEntity;
+import com.Minimalist.service.PAEService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping(
-        value = ResponseConstant.FLY_URL,
+        value = "/api/pae",
         produces = {
                 MediaType.APPLICATION_JSON_VALUE })
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
         RequestMethod.PUT })
 public class PAEController {
+
+    @Autowired
+    private PAEService paeService;
+
+    public PAEController(PAEService paeService) {
+        this.paeService = paeService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PAEEntity>> findAll() {
+        List<PAEEntity> lista = paeService.findAll();
+        return lista.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PAEEntity> findOne(@PathVariable Long id) {
+        return ResponseEntity.ok(paeService.findOne(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<PAEEntity> save(@RequestBody PAEEntity pae) {
+        return ResponseEntity.ok(paeService.save(pae));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PAEEntity> update(@PathVariable Long id, @RequestBody PAEEntity pae) {
+        return ResponseEntity.ok(paeService.update(id, pae));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        paeService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<PAEEntity>> findByEstado(@PathVariable String estado) {
+        List<PAEEntity> lista = paeService.findByEstado(estado);
+        return lista.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/estudiante/{id}")
+    public ResponseEntity<PAEEntity> findByEstudianteId(@PathVariable("id") Long estudianteId) {
+        return ResponseEntity.ok(paeService.findByEstudianteId(estudianteId));
+    }
 }

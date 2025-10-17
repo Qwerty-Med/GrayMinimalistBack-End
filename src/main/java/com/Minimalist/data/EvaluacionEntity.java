@@ -1,23 +1,28 @@
 package com.Minimalist.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Table(name = "evaluaciones")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "evaluacion")
+@Builder
 public class EvaluacionEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String resultado;
+    private String tipo; // Ej: Parcial, Final, Taller
+    private Double nota;
 
-    @OneToOne
-    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "materia_id")
+    private MateriaEntity materia;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estudiante_id")
     private EstudianteEntity estudiante;
 }

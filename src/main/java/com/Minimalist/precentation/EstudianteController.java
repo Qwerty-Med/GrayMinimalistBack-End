@@ -1,19 +1,66 @@
 package com.Minimalist.precentation;
 
+import com.Minimalist.data.EstudianteEntity;
+import com.Minimalist.service.EstudianteService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping(
-        value = ResponseConstant.FLY_URL,
+        value = "/api/estudiantes",
         produces = {
                 MediaType.APPLICATION_JSON_VALUE })
 @CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
         RequestMethod.PUT })
 public class EstudianteController {
+
+    @Autowired
+    private  EstudianteService estudianteService;
+
+    public EstudianteController(EstudianteService estudianteService) {
+        this.estudianteService = estudianteService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EstudianteEntity>> getAll() {
+        var estudiantes = estudianteService.findAll();
+        return estudiantes.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(estudiantes);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EstudianteEntity> getById(@PathVariable Long id) {
+        return Optional.ofNullable(estudianteService.findOne(id))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/api/estudiantes/" )
+    public ResponseEntity<EstudianteEntity> create(@RequestBody EstudianteEntity estudiante) {
+        var nuevo = estudianteService.save(estudiante);
+        return ResponseEntity.ok(nuevo);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EstudianteEntity> update(@PathVariable Long id, @RequestBody EstudianteEntity estudiante) {
+        return Optional.ofNullable(estudianteService.update(id, estudiante))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        try {
+            estudianteService.deleteEstudiante(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

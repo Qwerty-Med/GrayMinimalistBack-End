@@ -1,15 +1,14 @@
 package com.Minimalist.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "charlaIA")
@@ -23,4 +22,8 @@ public class CharlaIAEntity {
 
     @ManyToMany(mappedBy = "charlas")
     private List<EstudianteEntity> asistentes;
+
+    @ManyToOne
+    @JoinColumn(name = "directiva_id")
+    private DirectivaEntity directiva;
 }

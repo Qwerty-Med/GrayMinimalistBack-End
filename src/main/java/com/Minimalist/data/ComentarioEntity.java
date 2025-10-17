@@ -1,12 +1,11 @@
 package com.Minimalist.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "comentario")
@@ -17,8 +16,12 @@ public class ComentarioEntity {
 
     private String contenido;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "encuesta_id")
     private EncuestaEntity encuesta;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estudiante_id")
+    private EstudianteEntity estudiante;
 }
 

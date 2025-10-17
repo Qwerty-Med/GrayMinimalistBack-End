@@ -10,6 +10,8 @@ public interface ComentarioService {
 
     public ComentarioEntity save (ComentarioEntity comentario);
 
+    ComentarioEntity update(Long id, ComentarioEntity comentarioActualizado);
+
     public ComentarioEntity findOne(Long id);
 
     public void deleteComentarioEntity(Long id);

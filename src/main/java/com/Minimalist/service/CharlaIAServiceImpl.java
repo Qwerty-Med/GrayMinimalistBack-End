@@ -2,47 +2,98 @@ package com.Minimalist.service;
 
 import com.Minimalist.data.CharlaIAEntity;
 import com.Minimalist.data.CharlaIARepository;
-import com.Minimalist.util.ResponseRest;
+import com.Minimalist.data.EstudianteEntity;
+import com.Minimalist.data.EstudianteRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.ResourceAccessException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CharlaIAServiceImpl implements CharlaIAService{
 
     private final CharlaIARepository charlaIARepository;
+    private final EstudianteRepository estudianteRepository;
+
+
+    /**
+     * Obtiene todas las charlas disponibles.
+     */
     @Override
-    public ResponseEntity<List<CharlaIAEntity>> findAll() {
-        ResponseRest response = new ResponseRest();
-        List<CharlaIAEntity> list = new ArrayList();
-        return (ResponseEntity) Optional.ofNullable(charlaIARepository.findAll()).map(charlaIAEntities -> {
-            response.setMetadata("Response ok", "00", "All charlas");
-            response.
-            return new ResponseEntity(response, HttpStatus.OK);
-        }).orElseGet(() -> {
-            response.setMetadata("Response not ok", "-1", "Don't save category");
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
-        });
+    @Transactional(readOnly = true)
+    public List<CharlaIAEntity> findAll() {
+       return (List<CharlaIAEntity>) charlaIARepository.findAll();
     }
 
+
+    /**
+     * Guarda una nueva charla junto con sus asistentes (validados).
+     */
     @Override
+    @Transactional
     public CharlaIAEntity save(CharlaIAEntity charla) {
+        if (charla.getAsistentes() != null && !charla.getAsistentes().isEmpty()) {
+            List<EstudianteEntity> asistentesValidados = charla.getAsistentes().stream()
+                    .map(a -> estudianteRepository.findById(a.getId())
+                            .orElseThrow(() -> new ResourceAccessException(
+                                    "Estudiante no encontrado con ID: " + a.getId())))
+                    .collect(Collectors.toList());
+            charla.setAsistentes(asistentesValidados);
+        }
         return charlaIARepository.save(charla);
     }
 
+    /**
+     * Actualiza los datos de una charla existente.
+     * Se actualizan tema, fecha y lista de asistentes.
+     */
     @Override
-    public CharlaIAEntity findOne(Long id) {
-        return charlaIARepository.findById(id).orElseThrow();
+    @Transactional
+    public CharlaIAEntity update(Long id, CharlaIAEntity updateCharla) {
+        return charlaIARepository.findById(id)
+                .map(existing -> {
+                    // Validar asistentes antes de actualizar
+                    if (updateCharla.getAsistentes() != null && !updateCharla.getAsistentes().isEmpty()) {
+                        List<EstudianteEntity> asistentesValidados = updateCharla.getAsistentes().stream()
+                                .map(a -> estudianteRepository.findById(a.getId())
+                                        .orElseThrow(() -> new ResourceAccessException(
+                                                "Estudiante no encontrado con ID: " + a.getId())))
+                                .collect(Collectors.toList());
+                        existing.setAsistentes(asistentesValidados);
+                    }
+
+                    existing.setTema(updateCharla.getTema());
+                    existing.setFecha(updateCharla.getFecha());
+                    return charlaIARepository.save(existing);
+                })
+                .orElseThrow(() -> new ResourceAccessException("No existe la charla con ID: " + id));
     }
 
+    /**
+     * Busca una charla por ID.
+     */
     @Override
+    @Transactional(readOnly = true)
+    public CharlaIAEntity findOne(Long id) {
+        return charlaIARepository.findById(id)
+                .orElseThrow(() -> new ResourceAccessException("No existe la charla con ID: " + id));
+    }
+
+
+    /**
+     * Elimina una charla.
+     */
+    @Override
+    @Transactional
     public void deleteCharlaIAEntity(Long id) {
-        charlaIARepository.deleteById(id);
+        Optional.ofNullable(charlaIARepository.findById(id)
+                        .orElseThrow(() -> new ResourceAccessException("No existe la charla con ID: " + id)))
+                .ifPresent(charlaIARepository::delete);
     }
 }
