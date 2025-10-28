@@ -4,6 +4,7 @@ package com.Minimalist.precentation;
 import com.Minimalist.data.EvaluacionEntity;
 import com.Minimalist.service.EvaluacionService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(
-        value = "/api/evaluaciones",
-        produces = {
-                MediaType.APPLICATION_JSON_VALUE })
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
-        RequestMethod.PUT })
+@RequestMapping(value = "/v1/evaluaciones", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class EvaluacionController {
 
     @Autowired

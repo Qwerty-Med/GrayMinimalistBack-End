@@ -14,12 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(
-        value = "/api/charlas",
-        produces = {
-                MediaType.APPLICATION_JSON_VALUE })
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
-        RequestMethod.PUT })
+@RequestMapping(value = "/v1/chasrlas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CharlaIAController {
 
     @Autowired

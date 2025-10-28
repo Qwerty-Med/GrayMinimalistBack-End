@@ -20,8 +20,7 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     @Transactional(readOnly = true)
     public List<EstudianteEntity> findAll() {
-        return StreamSupport.stream(estudianteRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+        return (List<EstudianteEntity>) estudianteRepository.findAll();
     }
 
     @Override

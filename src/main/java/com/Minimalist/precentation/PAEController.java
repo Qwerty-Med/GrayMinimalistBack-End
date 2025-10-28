@@ -3,6 +3,7 @@ package com.Minimalist.precentation;
 import com.Minimalist.data.PAEEntity;
 import com.Minimalist.service.PAEService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(
-        value = "/api/pae",
-        produces = {
-                MediaType.APPLICATION_JSON_VALUE })
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
-        RequestMethod.PUT })
+@RequestMapping(value = "/v1/pae", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class PAEController {
 
     @Autowired

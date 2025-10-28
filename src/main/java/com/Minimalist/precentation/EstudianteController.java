@@ -14,11 +14,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(
-        value = "/api/estudiantes",
+        value = "/v1/estudiantes",
         produces = {
                 MediaType.APPLICATION_JSON_VALUE })
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
-        RequestMethod.PUT })
 public class EstudianteController {
 
     @Autowired
@@ -41,13 +39,14 @@ public class EstudianteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/api/estudiantes/" )
+    @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
     public ResponseEntity<EstudianteEntity> create(@RequestBody EstudianteEntity estudiante) {
+
         var nuevo = estudianteService.save(estudiante);
         return ResponseEntity.ok(nuevo);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<EstudianteEntity> update(@PathVariable Long id, @RequestBody EstudianteEntity estudiante) {
         return Optional.ofNullable(estudianteService.update(id, estudiante))
                 .map(ResponseEntity::ok)

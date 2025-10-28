@@ -1,18 +1,20 @@
 package com.Minimalist.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "materias")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class MateriaEntity {
+@Table(name = "materias")
+public class MateriaEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +24,7 @@ public class MateriaEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profesor_id")
+    @JsonBackReference
     private ProfesorEntity profesor;
 
     @ManyToMany
@@ -33,10 +36,12 @@ public class MateriaEntity {
     private List<EstudianteEntity> estudiantes;
 
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<EvaluacionEntity> evaluaciones;
 
     @ManyToOne
     @JoinColumn(name = "centro_academico_id")
+    @JsonBackReference
     private DirectivaEntity directiva;
 }
 

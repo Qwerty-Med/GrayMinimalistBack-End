@@ -3,6 +3,7 @@ package com.Minimalist.precentation;
 import com.Minimalist.data.MateriaEntity;
 import com.Minimalist.service.MateriaService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(
-        value = "/api/materias",
-        produces = {
-                MediaType.APPLICATION_JSON_VALUE })
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE,
-        RequestMethod.PUT })
+@RequestMapping(value = "/v1/materias", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class MateriaController {
 
-    @Autowired
-    private  MateriaService materiaService;
+    private final  MateriaService materiaService;
 
-    public MateriaController(MateriaService materiaService) {
-        this.materiaService = materiaService;
-    }
 
     @GetMapping
     public ResponseEntity<List<MateriaEntity>> getAll() {
