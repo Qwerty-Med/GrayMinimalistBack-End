@@ -56,8 +56,5 @@ public class PAEController {
         return lista.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(lista);
     }
 
-    @GetMapping("/estudiante/{id}")
-    public ResponseEntity<PAEEntity> findByEstudianteId(@PathVariable("id") Long estudianteId) {
-        return ResponseEntity.ok(paeService.findByEstudianteId(estudianteId));
-    }
+
 }

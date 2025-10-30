@@ -34,10 +34,9 @@ public class MateriaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/api/materias/")
+    @PostMapping(value = "/create")
     public ResponseEntity<MateriaEntity> create(@RequestBody MateriaEntity materia) {
-        var nueva = materiaService.save(materia);
-        return ResponseEntity.ok(nueva);
+        return ResponseEntity.ok(materia);
     }
 
     @PutMapping("/{id}")

@@ -38,14 +38,7 @@ public class CharlaIAServiceImpl implements CharlaIAService{
     @Override
     @Transactional
     public CharlaIAEntity save(CharlaIAEntity charla) {
-        if (charla.getAsistentes() != null && !charla.getAsistentes().isEmpty()) {
-            List<EstudianteEntity> asistentesValidados = charla.getAsistentes().stream()
-                    .map(a -> estudianteRepository.findById(a.getId())
-                            .orElseThrow(() -> new ResourceAccessException(
-                                    "Estudiante no encontrado con ID: " + a.getId())))
-                    .collect(Collectors.toList());
-            charla.setAsistentes(asistentesValidados);
-        }
+
         return charlaIARepository.save(charla);
     }
 
@@ -58,15 +51,7 @@ public class CharlaIAServiceImpl implements CharlaIAService{
     public CharlaIAEntity update(Long id, CharlaIAEntity updateCharla) {
         return charlaIARepository.findById(id)
                 .map(existing -> {
-                    // Validar asistentes antes de actualizar
-                    if (updateCharla.getAsistentes() != null && !updateCharla.getAsistentes().isEmpty()) {
-                        List<EstudianteEntity> asistentesValidados = updateCharla.getAsistentes().stream()
-                                .map(a -> estudianteRepository.findById(a.getId())
-                                        .orElseThrow(() -> new ResourceAccessException(
-                                                "Estudiante no encontrado con ID: " + a.getId())))
-                                .collect(Collectors.toList());
-                        existing.setAsistentes(asistentesValidados);
-                    }
+
 
                     existing.setTema(updateCharla.getTema());
                     existing.setFecha(updateCharla.getFecha());

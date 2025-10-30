@@ -1,44 +1,43 @@
 package com.Minimalist.data;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "directiva")
-public class DirectivaEntity {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class DirectivaEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
     private String cargo;
 
-    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<ProfesorEntity> profesores;
 
-    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<EstudianteEntity> estudiantes;
 
-    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    private List<String> estudiantes;
+
+    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MateriaEntity> materias;
 
-    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CharlaIAEntity> charlas;
 
-    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<EncuestaEntity> encuestas;
+
+    private List<String> encuestas;
+
+
+    private List<String> profesores;
+
 }

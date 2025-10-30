@@ -20,8 +20,10 @@ public class CharlaIAEntity {
     private String tema;
     private LocalDate fecha;
 
-    @ManyToMany(mappedBy = "charlas")
-    private List<EstudianteEntity> asistentes;
+
+    private List<String> asistente;
+
+    private String estudiante;
 
     @ManyToOne
     @JoinColumn(name = "directiva_id")

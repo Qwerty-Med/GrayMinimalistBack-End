@@ -13,10 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(
-        value = "/v1/estudiantes",
-        produces = {
-                MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = {"/v1/estudiantes"})
 public class EstudianteController {
 
     @Autowired
@@ -39,7 +36,7 @@ public class EstudianteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/create")
     public ResponseEntity<EstudianteEntity> create(@RequestBody EstudianteEntity estudiante) {
 
         var nuevo = estudianteService.save(estudiante);

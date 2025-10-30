@@ -1,27 +1,41 @@
 package com.Minimalist.service;
 
+import com.Minimalist.data.DirectivaEntity;
+import com.Minimalist.data.DirectivaRepository;
 import com.Minimalist.data.ProfesorEntity;
 import com.Minimalist.data.ProfesorRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-@RequiredArgsConstructor
-@Transactional
 public class ProfesorServiceImpl implements ProfesorService {
+    @Autowired
+    private  ProfesorRepository profesorRepository;
 
-    private final ProfesorRepository profesorRepository;
+    @Autowired
+    private DirectivaRepository directivaRepository;
+
+    public ProfesorServiceImpl(ProfesorRepository profesorRepository, DirectivaRepository directivaRepository) {
+        this.profesorRepository = profesorRepository;
+        this.directivaRepository = directivaRepository;
+    }
 
     @Override
-    @Transactional(readOnly = true)
     public List<ProfesorEntity> findAll() {
         return StreamSupport.stream(profesorRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProfesorEntity> findTerm(String name) {
+        return profesorRepository.findByNombreContainingIgnoreCase(name);
     }
 
     @Override
@@ -36,15 +50,17 @@ public class ProfesorServiceImpl implements ProfesorService {
         return profesorRepository.save(profesor);
     }
 
-    @Override
+
+
     public ProfesorEntity update(Long id, ProfesorEntity profesorActualizado) {
         return profesorRepository.findById(id)
                 .map(profesor -> {
-                    profesor.setNombre(profesorActualizado.getNombre());
+                    BeanUtils.copyProperties(profesorActualizado, profesor, "id");
                     return profesorRepository.save(profesor);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Profesor no encontrado con ID: " + id));
     }
+
 
     @Override
     public void deleteProfesor(Long id) {

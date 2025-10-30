@@ -1,7 +1,6 @@
 package com.Minimalist.data;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,11 +8,11 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "materias")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MateriaEntity implements Serializable {
 
     @Id
@@ -22,18 +21,15 @@ public class MateriaEntity implements Serializable {
 
     private String nombre;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profesor_id")
-    @JsonBackReference
+
     private ProfesorEntity profesor;
 
-    @ManyToMany
-    @JoinTable(
-            name = "materia_estudiante",
-            joinColumns = @JoinColumn(name = "materia_id"),
-            inverseJoinColumns = @JoinColumn(name = "estudiante_id")
-    )
-    private List<EstudianteEntity> estudiantes;
+
+
+    @ManyToOne
+    @JoinColumn(name = "estudiante_id", referencedColumnName = "id")
+    @JsonBackReference
+    private EstudianteEntity estudiante;
 
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

@@ -1,9 +1,10 @@
 package com.Minimalist.precentation;
 
+
+
 import com.Minimalist.data.ProfesorEntity;
 import com.Minimalist.service.ProfesorService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/v1/profesores", produces = MediaType.APPLICATION_JSON_VALUE)
-@RequiredArgsConstructor
+@RequestMapping(value= {"/v1/profesores"})
 public class ProfesorController {
+    @Autowired
+    private ProfesorService profesorService;
 
-    private final ProfesorService profesorService;
+    public ProfesorController(ProfesorService profesorService) {
+        this.profesorService = profesorService;
+    }
 
     @GetMapping
     public ResponseEntity<List<ProfesorEntity>> getAll() {
@@ -30,13 +34,19 @@ public class ProfesorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/create")
+    @GetMapping({"/term/{name}"})
+    public ResponseEntity<List<ProfesorEntity>> getByTerm(@PathVariable String name) {
+        return Optional.ofNullable(profesorService.findTerm(name))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping(value = "/create")
     public ResponseEntity<ProfesorEntity> create(@RequestBody ProfesorEntity profesor) {
         var nuevo = profesorService.save(profesor);
         return ResponseEntity.ok(nuevo);
     }
-
-    @PutMapping("/update/{id}")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<ProfesorEntity> update(@PathVariable Long id, @RequestBody ProfesorEntity profesor) {
         return Optional.ofNullable(profesorService.update(id, profesor))
                 .map(ResponseEntity::ok)
@@ -46,6 +56,6 @@ public class ProfesorController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         profesorService.deleteProfesor(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

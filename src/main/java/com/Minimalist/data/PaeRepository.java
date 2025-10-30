@@ -7,7 +7,4 @@ import java.util.List;
 public interface PaeRepository extends CrudRepository<PAEEntity, Long> {
     // 🔍 Buscar PAE por estado (Activo, En seguimiento, Finalizado, etc.)
     List<PAEEntity> findByEstado(String estado);
-
-    // 🔍 Buscar PAE por ID del estudiante
-    PAEEntity findByEstudianteId(Long estudianteId);
 }

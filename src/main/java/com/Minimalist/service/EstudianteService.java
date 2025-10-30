@@ -9,5 +9,6 @@ public interface EstudianteService {
     EstudianteEntity findOne(Long id);
     EstudianteEntity save(EstudianteEntity estudiante);
     EstudianteEntity update(Long id, EstudianteEntity estudiante);
+    EstudianteEntity findByNombreContainingIgnoreCase(String termino);
     void deleteEstudiante(Long id);
 }

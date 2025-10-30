@@ -1,7 +1,6 @@
 package com.Minimalist.data;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,11 +8,10 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "profesores")
+@Table(name = "profesor")
 public class ProfesorEntity implements Serializable {
 
     @Id
@@ -23,17 +21,10 @@ public class ProfesorEntity implements Serializable {
     private String nombre;
     private String primerApellido;
     private String segundoApellido;
-    private Long telefono;
+    private long telefono;
     private String direccion;
     private String correo;
+    private String materias;
 
 
-    @OneToMany(mappedBy = "profesor", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
-    private List<MateriaEntity> materias;
-
-    @ManyToOne
-    @JoinColumn(name = "centro_academico_id")
-    @JsonBackReference
-    private DirectivaEntity directiva;
 }

@@ -1,9 +1,11 @@
 package com.Minimalist.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,14 +20,7 @@ public class PAEEntity implements Serializable {
 
     private String estado; // "Activo", "En seguimiento", "Finalizado", etc.
 
-    // Relación directa con el estudiante que participa en el PAE
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "estudiante_id")
-    private EstudianteEntity estudiante;
 
-    // Relación con el centro académico (directiva) que administra el PAE
-    @ManyToOne
-    @JoinColumn(name = "centro_academico_id")
-    private DirectivaEntity centroAcademico;
+    private  String estudiante;
+
 }

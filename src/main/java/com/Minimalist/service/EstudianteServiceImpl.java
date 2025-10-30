@@ -46,6 +46,11 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
+    public EstudianteEntity findByNombreContainingIgnoreCase(String termino) {
+        return estudianteRepository.findByNombreContainingIgnoreCase(termino);
+    }
+
+    @Override
     public void deleteEstudiante(Long id) {
         estudianteRepository.findById(id)
                 .ifPresentOrElse(estudianteRepository::delete,
