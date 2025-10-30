@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/v1/pae", produces = MediaType.APPLICATION_JSON_VALUE)
-@RequiredArgsConstructor
+@RequestMapping(value= {"/v1/pae"})
 public class PAEController {
 
     @Autowired
@@ -34,12 +33,12 @@ public class PAEController {
         return ResponseEntity.ok(paeService.findOne(id));
     }
 
-    @PostMapping
+    @PostMapping(value = "/create")
     public ResponseEntity<PAEEntity> save(@RequestBody PAEEntity pae) {
         return ResponseEntity.ok(paeService.save(pae));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<PAEEntity> update(@PathVariable Long id, @RequestBody PAEEntity pae) {
         return ResponseEntity.ok(paeService.update(id, pae));
     }
@@ -50,11 +49,7 @@ public class PAEController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/estado/{estado}")
-    public ResponseEntity<List<PAEEntity>> findByEstado(@PathVariable String estado) {
-        List<PAEEntity> lista = paeService.findByEstado(estado);
-        return lista.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(lista);
-    }
+
 
 
 }

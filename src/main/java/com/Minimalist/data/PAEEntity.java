@@ -8,8 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "pae")
@@ -18,7 +17,7 @@ public class PAEEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String estado; // "Activo", "En seguimiento", "Finalizado", etc.
+    private String nombre;
 
 
     private  String estudiante;

@@ -1,6 +1,7 @@
 package com.Minimalist.precentation;
 
 import com.Minimalist.data.EstudianteEntity;
+import com.Minimalist.data.ProfesorEntity;
 import com.Minimalist.service.EstudianteService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,12 @@ public class EstudianteController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping({"/term/{name}"})
+    public ResponseEntity<List<EstudianteEntity>> getByTerm(@PathVariable String name) {
+        return Optional.ofNullable(estudianteService.findByNombreContainingIgnoreCase(name))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

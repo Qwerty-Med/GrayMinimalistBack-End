@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface EstudianteRepository extends CrudRepository<EstudianteEntity, Long> {
-     EstudianteEntity findByNombreContainingIgnoreCase(String termino);
+     List<EstudianteEntity> findByNombreContainingIgnoreCase(String termino);
 }

@@ -8,8 +8,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "encuesta")
@@ -18,20 +17,11 @@ public class EncuestaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String titulo;
+    private String nombre;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudiante_id")
-    @JsonBackReference
-    private EstudianteEntity estudiante;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "directiva_id")
-    @JsonBackReference
-    private DirectivaEntity directiva;
+    private String estudiante;
 
-    @OneToMany(mappedBy = "encuesta", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<ComentarioEntity> comentarios;
+    private String comentarios;
 }
 

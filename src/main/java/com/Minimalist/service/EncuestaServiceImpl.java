@@ -2,8 +2,11 @@ package com.Minimalist.service;
 
 import com.Minimalist.data.EncuestaEntity;
 import com.Minimalist.data.EncuestaRepository;
+import com.Minimalist.data.EstudianteEntity;
 import com.Minimalist.data.EstudianteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,12 +16,9 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-@RequiredArgsConstructor
-@Transactional
 public class EncuestaServiceImpl implements EncuestaService {
-
-    private final EncuestaRepository encuestaRepository;
-    private final EstudianteRepository estudianteRepository;
+    @Autowired
+    private  EncuestaRepository encuestaRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,10 +36,7 @@ public class EncuestaServiceImpl implements EncuestaService {
 
     @Override
     public EncuestaEntity save(EncuestaEntity encuesta) {
-        Optional.ofNullable(encuesta.getEstudiante())
-                .map(estudiante -> estudianteRepository.findById(estudiante.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + estudiante.getId())))
-                .ifPresent(encuesta::setEstudiante);
+
 
         // Comentarios se guardan automáticamente por cascade
         return encuestaRepository.save(encuesta);
@@ -49,13 +46,8 @@ public class EncuestaServiceImpl implements EncuestaService {
     public EncuestaEntity update(Long id, EncuestaEntity encuestaActualizada) {
         return encuestaRepository.findById(id)
                 .map(encuesta -> {
-                    encuesta.setTitulo(encuestaActualizada.getTitulo());
 
-                    Optional.ofNullable(encuestaActualizada.getEstudiante())
-                            .map(e -> estudianteRepository.findById(e.getId())
-                                    .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + e.getId())))
-                            .ifPresent(encuesta::setEstudiante);
-
+                    BeanUtils.copyProperties(encuestaActualizada, encuesta, "id");
                     return encuestaRepository.save(encuesta);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Encuesta no encontrada con ID: " + id));
@@ -68,5 +60,10 @@ public class EncuestaServiceImpl implements EncuestaService {
                         encuestaRepository::delete,
                         () -> { throw new IllegalArgumentException("Encuesta no encontrada con ID: " + id); }
                 );
+    }
+
+    @Override
+    public List<EncuestaEntity> findByNombreContainingIgnoreCase(String termino) {
+        return encuestaRepository.findByNombreContainingIgnoreCase(termino);
     }
 }

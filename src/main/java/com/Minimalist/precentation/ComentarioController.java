@@ -58,7 +58,7 @@ public class ComentarioController {
     /**
      * Actualizar un comentario existente
      */
-    @PutMapping("/{id}")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<ComentarioEntity> updateComentario(
             @PathVariable Long id,
             @RequestBody ComentarioEntity comentarioActualizado) {

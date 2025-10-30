@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "materias")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class MateriaEntity implements Serializable {
 
     @Id
@@ -22,22 +21,15 @@ public class MateriaEntity implements Serializable {
     private String nombre;
 
 
-    private ProfesorEntity profesor;
+    private String profesor;
 
 
 
-    @ManyToOne
-    @JoinColumn(name = "estudiante_id", referencedColumnName = "id")
-    @JsonBackReference
-    private EstudianteEntity estudiante;
 
-    @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<EvaluacionEntity> evaluaciones;
+    private String estudiante;
 
-    @ManyToOne
-    @JoinColumn(name = "centro_academico_id")
-    @JsonBackReference
-    private DirectivaEntity directiva;
+
+    private String evaluaciones;
+
 }
 

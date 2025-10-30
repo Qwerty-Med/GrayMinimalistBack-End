@@ -2,6 +2,7 @@ package com.Minimalist.precentation;
 
 
 import com.Minimalist.data.EncuestaEntity;
+import com.Minimalist.data.EstudianteEntity;
 import com.Minimalist.service.EncuestaService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/v1/encuestas", produces = MediaType.APPLICATION_JSON_VALUE)
-@RequiredArgsConstructor
+@RequestMapping(value = {"/v1/encuestas"})
 public class EncuestaController {
 
     @Autowired
@@ -41,13 +41,13 @@ public class EncuestaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/api/encuestas/")
+    @PostMapping(value = "/create")
     public ResponseEntity<EncuestaEntity> createEncuesta(@RequestBody EncuestaEntity encuesta) {
         EncuestaEntity nuevaEncuesta = encuestaService.save(encuesta);
         return ResponseEntity.ok(nuevaEncuesta);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<EncuestaEntity> updateEncuesta(
             @PathVariable Long id,
             @RequestBody EncuestaEntity encuestaActualizada) {
@@ -65,5 +65,12 @@ public class EncuestaController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping({"/term/{name}"})
+    public ResponseEntity<List<EncuestaEntity>> getByTerm(@PathVariable String name) {
+        return Optional.ofNullable(encuestaService.findByNombreContainingIgnoreCase(name))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

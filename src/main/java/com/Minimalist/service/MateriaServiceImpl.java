@@ -4,6 +4,7 @@ import com.Minimalist.data.MateriaEntity;
 import com.Minimalist.data.MateriaRepository;
 import com.Minimalist.data.ProfesorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,20 +37,16 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     public MateriaEntity save(MateriaEntity materia) {
-        Optional.ofNullable(materia.getProfesor())
-                .map(p -> profesorRepository.findById(p.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Profesor no encontrado con ID: " + p.getId())))
-                .ifPresent(materia::setProfesor);
-
         return materiaRepository.save(materia);
     }
+
+
 
     @Override
     public MateriaEntity update(Long id, MateriaEntity materiaActualizada) {
         return materiaRepository.findById(id)
                 .map(materia -> {
-                    materia.setNombre(materiaActualizada.getNombre());
-                    materia.setProfesor(materiaActualizada.getProfesor());
+                    BeanUtils.copyProperties(materiaActualizada, materia, "id");
                     return materiaRepository.save(materia);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Materia no encontrada con ID: " + id));
@@ -60,5 +57,10 @@ public class MateriaServiceImpl implements MateriaService {
         materiaRepository.findById(id)
                 .ifPresentOrElse(materiaRepository::delete,
                         () -> { throw new IllegalArgumentException("Materia no encontrada con ID: " + id); });
+    }
+
+    @Override
+    public List<MateriaEntity> findByNombreContainingIgnoreCase(String termino) {
+        return materiaRepository.findByNombreContainingIgnoreCase(termino);
     }
 }

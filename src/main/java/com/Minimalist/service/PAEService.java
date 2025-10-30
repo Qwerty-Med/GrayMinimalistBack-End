@@ -15,7 +15,6 @@ public interface PAEService {
 
     void delete(Long id);
 
-    // Métodos adicionales para administración por parte de la Directiva
-    List<PAEEntity> findByEstado(String estado);
+
 
 }

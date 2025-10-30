@@ -10,4 +10,6 @@ public interface MateriaService {
     MateriaEntity save(MateriaEntity materia);
     MateriaEntity update(Long id, MateriaEntity materia);
     void deleteMateria(Long id);
+
+    List<MateriaEntity> findByNombreContainingIgnoreCase(String termino);
 }

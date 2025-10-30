@@ -2,6 +2,7 @@ package com.Minimalist.precentation;
 
 
 import com.Minimalist.data.EvaluacionEntity;
+import com.Minimalist.data.ProfesorEntity;
 import com.Minimalist.service.EvaluacionService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/v1/evaluaciones", produces = MediaType.APPLICATION_JSON_VALUE)
-@RequiredArgsConstructor
+@RequestMapping(value= {"/v1/evaluaciones"})
 public class EvaluacionController {
 
     @Autowired
@@ -40,13 +40,13 @@ public class EvaluacionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/api/evaluaciones/")
+    @PostMapping(value = "/create")
     public ResponseEntity<EvaluacionEntity> create(@RequestBody EvaluacionEntity evaluacion) {
         var nueva = evaluacionService.save(evaluacion);
         return ResponseEntity.ok(nueva);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<EvaluacionEntity> update(@PathVariable Long id, @RequestBody EvaluacionEntity evaluacion) {
         return Optional.ofNullable(evaluacionService.update(id, evaluacion))
                 .map(ResponseEntity::ok)
@@ -61,5 +61,12 @@ public class EvaluacionController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping({"/term/{name}"})
+    public ResponseEntity<List<EvaluacionEntity>> getByTerm(@PathVariable String name) {
+        return Optional.ofNullable(evaluacionService.findByNombreContainingIgnoreCase(name))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

@@ -3,6 +3,7 @@ package com.Minimalist.service;
 import com.Minimalist.data.EstudianteEntity;
 import com.Minimalist.data.EstudianteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,18 +36,21 @@ public class EstudianteServiceImpl implements EstudianteService {
         return estudianteRepository.save(estudiante);
     }
 
+
+
+
     @Override
     public EstudianteEntity update(Long id, EstudianteEntity estudianteActualizado) {
         return estudianteRepository.findById(id)
                 .map(estudiante -> {
-                    estudiante.setNombre(estudianteActualizado.getNombre());
+                    BeanUtils.copyProperties(estudianteActualizado, estudiante, "id");
                     return estudianteRepository.save(estudiante);
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + id));
     }
 
     @Override
-    public EstudianteEntity findByNombreContainingIgnoreCase(String termino) {
+    public List<EstudianteEntity> findByNombreContainingIgnoreCase(String termino) {
         return estudianteRepository.findByNombreContainingIgnoreCase(termino);
     }
 

@@ -1,6 +1,7 @@
 package com.Minimalist.precentation;
 
 import com.Minimalist.data.MateriaEntity;
+import com.Minimalist.data.ProfesorEntity;
 import com.Minimalist.service.MateriaService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/v1/materias", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value= {"/v1/materias"})
 @RequiredArgsConstructor
 public class MateriaController {
 
@@ -36,10 +37,13 @@ public class MateriaController {
 
     @PostMapping(value = "/create")
     public ResponseEntity<MateriaEntity> create(@RequestBody MateriaEntity materia) {
-        return ResponseEntity.ok(materia);
+       var  nuevo = materiaService.save(materia);
+        return ResponseEntity.ok(nuevo);
     }
 
-    @PutMapping("/{id}")
+
+
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<MateriaEntity> update(@PathVariable Long id, @RequestBody MateriaEntity materia) {
         return Optional.ofNullable(materiaService.update(id, materia))
                 .map(ResponseEntity::ok)
@@ -54,6 +58,13 @@ public class MateriaController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping({"/term/{name}"})
+    public ResponseEntity<List<MateriaEntity>> getByTerm(@PathVariable String name) {
+        return Optional.ofNullable(materiaService.findByNombreContainingIgnoreCase(name))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
 

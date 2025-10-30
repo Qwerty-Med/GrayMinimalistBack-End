@@ -1,10 +1,8 @@
 package com.Minimalist.service;
 
-import com.Minimalist.data.EstudianteRepository;
-import com.Minimalist.data.EvaluacionEntity;
-import com.Minimalist.data.EvaluacionRepository;
-import com.Minimalist.data.MateriaRepository;
+import com.Minimalist.data.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +12,9 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-@RequiredArgsConstructor
-@Transactional
 public class EvaluacionServiceImpl implements EvaluacionService {
-
-    private final EvaluacionRepository evaluacionRepository;
-    private final MateriaRepository materiaRepository;
-    private final EstudianteRepository estudianteRepository;
+    @Autowired
+    private  EvaluacionRepository evaluacionRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -38,15 +32,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     @Override
     public EvaluacionEntity save(EvaluacionEntity evaluacion) {
-        Optional.ofNullable(evaluacion.getMateria())
-                .map(m -> materiaRepository.findById(m.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Materia no encontrada con ID: " + m.getId())))
-                .ifPresent(evaluacion::setMateria);
 
-        Optional.ofNullable(evaluacion.getEstudiante())
-                .map(e -> estudianteRepository.findById(e.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + e.getId())))
-                .ifPresent(evaluacion::setEstudiante);
 
         return evaluacionRepository.save(evaluacion);
     }
@@ -56,7 +42,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         return evaluacionRepository.findById(id)
                 .map(evaluacion -> {
                     evaluacion.setNota(evaluacionActualizada.getNota());
-                    evaluacion.setTipo(evaluacionActualizada.getTipo());
+                    evaluacion.setNombre(evaluacionActualizada.getNombre());
                     evaluacion.setMateria(evaluacionActualizada.getMateria());
                     evaluacion.setEstudiante(evaluacionActualizada.getEstudiante());
                     return evaluacionRepository.save(evaluacion);
@@ -69,5 +55,10 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         evaluacionRepository.findById(id)
                 .ifPresentOrElse(evaluacionRepository::delete,
                         () -> { throw new IllegalArgumentException("Evaluación no encontrada con ID: " + id); });
+    }
+
+    @Override
+    public List<EvaluacionEntity> findByNombreContainingIgnoreCase(String termino) {
+        return evaluacionRepository.findByNombreContainingIgnoreCase(termino);
     }
 }

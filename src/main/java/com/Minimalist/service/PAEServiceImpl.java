@@ -17,11 +17,10 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-@RequiredArgsConstructor
 public class PAEServiceImpl implements PAEService {
 
     @Autowired
-    private final PaeRepository paeRepository;
+    private  PaeRepository paeRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -50,12 +49,7 @@ public class PAEServiceImpl implements PAEService {
     public PAEEntity update(Long id, PAEEntity updated) {
         return paeRepository.findById(id)
                 .map(existing -> {
-                    // Actualización de campos
-                    BeanUtils.copyProperties(updated, existing, "id", "estudiante", "centroAcademico");
-
-
-
-
+                    BeanUtils.copyProperties(updated, existing, "id");
 
                     return paeRepository.save(existing);
                 })
@@ -72,10 +66,7 @@ public class PAEServiceImpl implements PAEService {
                         });
     }
 
-    @Override
-    public List<PAEEntity> findByEstado(String estado) {
-        return paeRepository.findByEstado(estado);
-    }
+
 
 
 }

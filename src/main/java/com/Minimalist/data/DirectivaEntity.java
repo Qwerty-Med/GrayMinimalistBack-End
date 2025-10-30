@@ -28,11 +28,11 @@ public class DirectivaEntity implements Serializable {
 
     private List<String> estudiantes;
 
-    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MateriaEntity> materias;
 
-    @OneToMany(mappedBy = "directiva", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<CharlaIAEntity> charlas;
+    private List<String> materias;
+
+
+    private List<String> charlas;
 
 
     private List<String> encuestas;

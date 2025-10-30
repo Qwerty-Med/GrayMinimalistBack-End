@@ -43,7 +43,7 @@ public class DirectivaController {
         return ResponseEntity.ok(directivaService.save(directiva));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<DirectivaEntity> update(@PathVariable Long id, @RequestBody DirectivaEntity updated) {
         return ResponseEntity.ok(directivaService.update(id, updated));
     }
