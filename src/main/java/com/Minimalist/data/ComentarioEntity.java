@@ -15,13 +15,5 @@ public class ComentarioEntity {
     private Long id;
 
     private String contenido;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "encuesta_id")
-    private EncuestaEntity encuesta;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudiante_id")
-    private EstudianteEntity estudiante;
 }
 

@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/v1/comentarios", produces = MediaType.APPLICATION_JSON_VALUE)
-@RequiredArgsConstructor
 public class ComentarioController {
     @Autowired
     private  ComentarioService comentarioService;
@@ -49,7 +48,7 @@ public class ComentarioController {
     /**
      * Crear un nuevo comentario
      */
-    @PostMapping("/api/comentarios/")
+    @PostMapping(value = "/create")
     public ResponseEntity<ComentarioEntity> createComentario(@RequestBody ComentarioEntity comentario) {
         ComentarioEntity nuevoComentario = comentarioService.save(comentario);
         return ResponseEntity.ok(nuevoComentario);

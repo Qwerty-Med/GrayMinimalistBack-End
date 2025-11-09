@@ -28,16 +28,6 @@ public class ComentarioServiceImpl implements ComentarioService{
 
     @Override
     public ComentarioEntity save(ComentarioEntity comentario) {
-        // Validar relaciones antes de guardar
-        Optional.ofNullable(comentario.getEncuesta())
-                .map(EncuestaEntity::getId)
-                .flatMap(encuestaRepository::findById)
-                .orElseThrow(() -> new IllegalArgumentException("Encuesta no encontrada"));
-
-        Optional.ofNullable(comentario.getEstudiante())
-                .map(EstudianteEntity::getId)
-                .flatMap(estudianteRepository::findById)
-                .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado"));
 
         return comentarioRepository.save(comentario);
     }
@@ -47,16 +37,6 @@ public class ComentarioServiceImpl implements ComentarioService{
         return comentarioRepository.findById(id)
                 .map(comentario -> {
                     comentario.setContenido(comentarioActualizado.getContenido());
-
-                    Optional.ofNullable(comentarioActualizado.getEncuesta())
-                            .map(EncuestaEntity::getId)
-                            .flatMap(encuestaRepository::findById)
-                            .ifPresent(comentario::setEncuesta);
-
-                    Optional.ofNullable(comentarioActualizado.getEstudiante())
-                            .map(EstudianteEntity::getId)
-                            .flatMap(estudianteRepository::findById)
-                            .ifPresent(comentario::setEstudiante);
 
                     return comentarioRepository.save(comentario);
                 })
